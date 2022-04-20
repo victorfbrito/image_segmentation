@@ -1,10 +1,10 @@
-Imagem 1 - Homem adulto em pé
+Imagem 3 - Homem pulando
 
-Porcentagem de semelhança: 91.8%
+Porcentagem de semelhança: 94.0%
 
 Filtros utilizados:
 
-Ajuste de contraste
 Filtro de escala cinza
 Filtro de média com janela deslizante
+Filtro MaxRGB
 Filtro de limiarização

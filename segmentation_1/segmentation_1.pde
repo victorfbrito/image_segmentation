@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 void setup() {
-  size(600, 600);
+  size(300, 400);
   noLoop();
 }
 void draw() {
@@ -11,15 +11,14 @@ void draw() {
   PImage aux = createImage(img.width, img.height, RGB);
   PImage aux_blue = createImage(img.width, img.height, RGB);
   PImage aux_red = createImage(img.width, img.height, RGB);
+  
   // Filtro de escala de cinza
   for(int y=0; y < img.height; y++) {
     for(int x=0; x < img.width; x++) {
        int pos = y*img.width + x;
        float media = (red(img.pixels[pos]) +
          green(img.pixels[pos]) + blue(img.pixels[pos]))/3;
-       //img.pixels[pos] = color(red(img.pixels[pos]));
        aux.pixels[pos] = color(media);
-       //aux.pixels[pos] = color(red(img.pixels[pos]));
     }
   }
   
@@ -56,17 +55,23 @@ void draw() {
   for(int y=0; y < img.height; y++) {
     for(int x=0; x < img.width; x++) {
        int pos = y*img.width + x;
+       float media = (red(img.pixels[pos]) +
+         green(img.pixels[pos]) + blue(img.pixels[pos]))/3;
        
       //Detect head 
       if(blue(aux_blue.pixels[pos]) < 80 && y > 75 && y < 200 && x > 105 && x < 180) 
          aux.pixels[pos] = color(255);
          
       //Detect arms
-      else if(blue(aux_blue.pixels[pos]) < 80 && y > 240 && y < 340 && x > 30 && x < 230) 
+      else if(red(img.pixels[pos]) > 80 && y > 240 && y < 340 && x > 30 && x < 230) 
          aux.pixels[pos] = color(255);
       
-      //Detect clothes
-      else if (red(aux_red.pixels[pos]) < 60 && y > 175 && x < 245 && x > 30) 
+      //Detect clothes (up)
+      else if (red(aux_red.pixels[pos]) < 60 && y > 175 && y < 310 && x < 245 && x > 30) 
+        aux.pixels[pos] = color(255);
+        
+      //Detect clothes (down)
+      else if (red(aux_red.pixels[pos]) < 60 && y > 310 && x < 245 && x > 55) 
         aux.pixels[pos] = color(255);
         
       else

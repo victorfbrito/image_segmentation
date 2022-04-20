@@ -1,10 +1,8 @@
-Imagem 1 - Homem adulto em pé
+Imagem 2 - Homem fazendo acrobacia
 
-Porcentagem de semelhança: 91.8%
+Porcentagem de semelhança: 97.3%
 
 Filtros utilizados:
 
-Ajuste de contraste
 Filtro de escala cinza
-Filtro de média com janela deslizante
 Filtro de limiarização

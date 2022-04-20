@@ -2,24 +2,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 void setup() {
-  size(600, 600);
+  size(267, 400);
   noLoop();
 }
 void draw() {
   PImage img = loadImage("original_image.jpg");
   PImage original_segmented_img = loadImage("original_segmented_image.jpg");
   PImage aux = createImage(img.width, img.height, RGB);
-  PImage aux_blue = createImage(img.width, img.height, RGB);
-  PImage aux_red = createImage(img.width, img.height, RGB);
+  
   // Filtro de escala de cinza
   for(int y=0; y < img.height; y++) {
     for(int x=0; x < img.width; x++) {
        int pos = y*img.width + x;
        float media = (red(img.pixels[pos]) +
          green(img.pixels[pos]) + blue(img.pixels[pos]))/3;
-       //img.pixels[pos] = color(red(img.pixels[pos]));
        aux.pixels[pos] = color(media);
-       //aux.pixels[pos] = color(red(img.pixels[pos]));
     }
   }
   
@@ -27,10 +24,11 @@ void draw() {
   for(int y=0; y < img.height; y++) {
     for(int x=0; x < img.width; x++) {
        int pos = y*img.width + x;
-       int jan = 1, qtde = 0; 
-       float media_red = 0; 
-       float media_blue = 0;
-  
+       int jan = 2, qtde = 0; 
+       float media_r = 0;
+       float media_g = 0;
+       float media_b = 0;
+
        for(int i = jan*(-1); i <= jan; i++) {
          for (int j = jan*(-1); j <= jan; j++) {
            int nx = x + j;
@@ -39,16 +37,33 @@ void draw() {
            if(ny >= 0 && ny < img.height &&
               nx >= 0 && nx < img.width) {
                 int pos_aux = ny*img.width + nx;
-                media_red += red(img.pixels[pos_aux]);
-                media_blue += blue(img.pixels[pos_aux]);
+                media_r += red(img.pixels[pos_aux]);
+                media_g += green(img.pixels[pos_aux]);
+                media_b += blue(img.pixels[pos_aux]);
                 qtde++;
               }
          }
        }
-       media_red = media_red / qtde;
-       media_blue = media_blue / qtde;
-       aux_red.pixels[pos] = color(media_red);
-       aux_blue.pixels[pos] = color(media_blue);
+       media_r = media_r / qtde;
+       media_g = media_g / qtde;
+       media_b = media_b / qtde;
+       aux.pixels[pos] = color(media_r,media_g,media_b);
+    }
+  }
+  
+  // Filtro de MaxRGB
+  for(int y=0; y < img.height; y++) {
+    for(int x=0; x < img.width; x++) {
+       int pos = y*img.width + x;
+        float r = red(aux.pixels[pos]);
+        float g = green(aux.pixels[pos]);
+        float b = blue(aux.pixels[pos]);
+        float mx = max(max(r,g),b);
+        if ( r < mx) r = 0; 
+        if ( g < mx) g = 0; 
+        if ( b < mx) b = 0; 
+        
+        aux.pixels[pos] = color(r,g,b);
     }
   }
   
@@ -56,21 +71,20 @@ void draw() {
   for(int y=0; y < img.height; y++) {
     for(int x=0; x < img.width; x++) {
        int pos = y*img.width + x;
+       float media = (red(img.pixels[pos]) +
+         green(img.pixels[pos]) + blue(img.pixels[pos]))/3;
        
-      //Detect head 
-      if(blue(aux_blue.pixels[pos]) < 80 && y > 75 && y < 200 && x > 105 && x < 180) 
-         aux.pixels[pos] = color(255);
-         
-      //Detect arms
-      else if(blue(aux_blue.pixels[pos]) < 80 && y > 240 && y < 340 && x > 30 && x < 230) 
-         aux.pixels[pos] = color(255);
-      
-      //Detect clothes
-      else if (red(aux_red.pixels[pos]) < 60 && y > 175 && x < 245 && x > 30) 
+      //Detect body 
+      if(red(aux.pixels[pos]) > 0  && y < 220 && x > 50 && x < 220) 
         aux.pixels[pos] = color(255);
-        
+      //Detect left leg
+      else if(red(aux.pixels[pos]) > 0 && media > 80 && y > 220 && y < 320 && x > 100 && x < 200) 
+        aux.pixels[pos] = color(255);
+      //Detect pants
+      else if(blue(aux.pixels[pos]) > 0 && blue(aux.pixels[pos]) < 160 && y > 140  && y < 260 && x < 205 && x > 50) 
+        aux.pixels[pos] = color(255);
       else
-         aux.pixels[pos] = color(0);
+        aux.pixels[pos] = color(0);
     }
   }
   
